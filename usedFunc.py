@@ -6,6 +6,12 @@ import pygame as pg
 def quit():
     pg.quit()
     sys.exit()
+    
+def reimage(img, pos):
+    w, h = img.get_size()
+    img2 = pg.Surface((w*2, h*2), pg.SRCALPHA)
+    img2.blit(img, (w-pos[0], h-pos[1]))
+    return img2
 
 
 def wait():
@@ -61,3 +67,12 @@ def cross_fade(surf, img, clock, col=BLACK):
 
 def word_wrap():
     pass
+
+
+def exp_required(level):
+    if 0 <= level <= 15:
+        return 2 * level + 7
+    elif 16 <= level <= 30:
+        return 5 * level - 38
+    elif level >= 31:
+        return 9 * level - 158

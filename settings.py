@@ -21,10 +21,10 @@ HEIGHT = 768
 WIDTH_MINI = 2024
 HEIGHT_MINI = 1768
 
-FPS = 60
+FPS = 120
 TITLE = "GAME NAME HERE"
 
-TILESIZE = 64
+TILESIZE = 128
 GRIDWIDTH = WIDTH / TILESIZE
 GRIDHEIGHT = HEIGHT / TILESIZE
 ############################################
@@ -50,12 +50,13 @@ PLAYER_IMG = 'manBlue_hold.png'
 PLAYER_HIT_RECT = pg.Rect(0, 0, 30, 30)
 BARREL_OFFSET = vec(30, 10)
 
+
 # Gun settings
 BULLET_IMG = 'bullet_dark.png'
 BULLET_SPEED = 500
 BULLET_LIFETIME = 1000
 BULLET_RATE = {'handgun': 150, 'destroyer': 30}
-KICKBACK = 200
+KICKBACK = 20
 GUN_SPREAD = 5
 BULLET_DAMAGE = 10
 
@@ -69,6 +70,7 @@ MOB_KNOCKBACK = 20
 AVOID_RADIUS = 50
 VENOM_IMG = 'venom.png'
 DETECT_RADIUS = 400
+ATTACK_RADIUS = 50
 
 # game images
 LOGO_IMAGE = 'logo.png'
@@ -112,6 +114,7 @@ BG_MUSIC = 'espionage.wav'
 MENU_MUSIC = 'menu.wav'
 #BG_MUSIC = 'open.mp3'
 LOGO_MUSIC = 'logo.wav'
+GLITCH_MUSIC = 'glitch_music.wav'
 
 
 #MENU_MUSIC_2 = 'open.mp3'
@@ -129,5 +132,10 @@ EFFECTS_SOUNDS = {'level_start': 'level_start.wav',
                   'alert': 'alert.wav',
                   'page_turn': 'page_turn.wav'}
 
-NOTE_IMAGES = {1: 'note_display1.png', 2: 'note_display2.png', 3: 'note_display3.png'}
+NOTE_IMAGES = {1: 'ww1.png', 2: '32739.png', 3: 'glitched_image.png',
+               4: 'genesis1.png', 5: '32738.png', 6: 'dev_chat.png'}
+
 COLLECTION_IMAGE = 'white_bg.jpg'
+
+
+EXP_FROM_ACTION = {'zombie': 5}

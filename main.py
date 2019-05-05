@@ -2,7 +2,7 @@
 # Game name: Undecided                   #
 # File name: main.py                     #
 # Author: Ryan Deng                      #
-# Last Edited: 27/04/2019                #
+# Last Edited: 01/05/2019                #
 ##########################################
 import pygame as pg
 import sys
@@ -17,7 +17,7 @@ from tilemap import *
 from scenes import *
 from usedFunc import *
 
-
+# 新电脑到了之后玩一玩turing自己做的游戏
 class Game:
 # goal for today: fix the minimap  - fixed
 # experiment with different fonts
@@ -29,10 +29,12 @@ class Game:
 # different gun's properties
 # drop item?
 # fix opening animation, framerate_independent (crossfade and progress bar)
-# create game over screen (animation?)
-# display different things when different notes are obtained
-
-
+# create game over screen (animation?)    - good
+# display different things when different notes are obtained,
+        # make one unique name for each note later on
+# the torch light does not change back when restart, needs to be fixed
+# make sure the game exit accpet closing from escape key as well
+# add mute
     def __init__(self):
         pg.init()
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
@@ -51,6 +53,73 @@ class Game:
         self.map_folder = path.join(self.game_folder, 'map')
         self.snd_folder = path.join(self.game_folder, 'snd')
         self.music_folder = path.join(self.game_folder, 'music')
+        self.zombie_folder = path.join(self.game_folder, 'zombie')
+        self.player_folder = path.join(self.game_folder, 'player')
+        self.boss1_folder = path.join(self.game_folder, 'Boss1')
+
+        boss1_adjust = (200, 253)
+        self.boss1_death = []
+        for i in range(10):
+            self.boss1_death.append(reimage(pg.image.load(path.join(self.boss1_folder, f'death/{str(i)}.png')).convert_alpha(), boss1_adjust))
+
+        self.boss1_move = []
+        for i in range(8):
+            self.boss1_move.append(reimage(pg.image.load(path.join(self.boss1_folder, f'move/{str(i)}.png')).convert_alpha(), boss1_adjust))
+
+        self.boss1_attack1 = []
+        for i in range(14):
+            self.boss1_attack1.append(reimage(pg.image.load(path.join(self.boss1_folder, f'attack1/{str(i)}.png')).convert_alpha(), boss1_adjust))
+
+        self.boss1_attack2 = []
+        for i in range(10):
+            self.boss1_attack2.append(reimage(pg.image.load(path.join(self.boss1_folder, f'attack2/{str(i)}.png')).convert_alpha(), boss1_adjust))
+
+        self.boss1_idle = []
+        for i in range(8):
+            self.boss1_idle.append(reimage(pg.image.load(path.join(self.boss1_folder, f'idle/{str(i)}.png')).convert_alpha(), boss1_adjust))
+
+
+
+
+
+        zombie_adjust = (158, 127)
+        self.zombie_death = []
+        for i in range(6):
+            self.zombie_death.append(reimage(pg.image.load(path.join(self.zombie_folder, f'death/{str(i)}.png')).convert_alpha(), zombie_adjust))
+        self.zombie_idle = []
+        for i in range(7):
+            self.zombie_idle.append(reimage(pg.image.load(path.join(self.zombie_folder, f'idle/{str(i)}.png')).convert_alpha(), zombie_adjust))
+        self.zombie_move = []
+        for i in range(9):
+            self.zombie_move.append(reimage(pg.image.load(path.join(self.zombie_folder, f'move/{str(i)}.png')).convert_alpha(), zombie_adjust))
+        self.zombie_attack = []
+        for i in range(9):
+            self.zombie_attack.append(reimage(pg.image.load(path.join(self.zombie_folder, f'attack/{str(i)}.png')).convert_alpha(),zombie_adjust))
+
+
+
+
+
+        player_adjust = (62, 104)
+
+        self.player_death = []
+        for i in range(6):
+            self.player_death.append(reimage(pg.image.load(path.join(self.player_folder, f'death/{str(i)}.png')).convert_alpha(), player_adjust))
+       # self.zombie_idle = []
+       # for i in range(1):
+         #   self.zombie_idle.append(reimage(pg.image.load(path.join(self.zombie_folder, f'idle/{str(i)}.png')).convert_alpha(), zombie_adjust))
+        player_adjust = (62, 104)
+        self.player_move = []
+        for i in range(6):
+            self.player_move.append(reimage(pg.image.load(path.join(self.player_folder, f'move/{str(i)}.png')).convert_alpha(), player_adjust))
+
+
+
+        self.player_attack = []
+        player_adjust = (63, 103)
+        for i in range(12):
+            self.player_attack.append(reimage(pg.image.load(path.join(self.player_folder, f'bat/{str(i)}.png')).convert_alpha(),player_adjust))
+
 
         # logo and menu images
         self.logo_img = pg.image.load(path.join(self.img_folder, LOGO_IMAGE)).convert()
@@ -113,6 +182,7 @@ class Game:
         self.effects_sounds = {}
         for type in EFFECTS_SOUNDS:
             self.effects_sounds[type] = pg.mixer.Sound(path.join(self.snd_folder, EFFECTS_SOUNDS[type]))
+        self.effects_sounds['page_turn'].set_volume(0.3)
 
         self.weapon_sounds = {}
         self.weapon_sounds['handgun'] = (pg.mixer.Sound(path.join(self.snd_folder, 'sfx_weapon_singleshot2.wav')))
@@ -148,6 +218,7 @@ class Game:
         self.bullets = pg.sprite.Group()
         self.items = pg.sprite.Group()
         self.guns = pg.sprite.Group()
+        self.boss1s = pg.sprite.Group()
 #------------------------spawn all sprites-----------------------------#
         for tile_object in self.map.tmxdata.objects:
             obj_center = vec(tile_object.x + tile_object.width / 2,
@@ -167,9 +238,11 @@ class Game:
                 self.player = Player(self, obj_center.x, obj_center.y)
             if tile_object.name == 'zombie':
                 Mob(self, obj_center.x, obj_center.y)
+            if tile_object.name == 'boss1':
+                Boss1(self, obj_center.x, obj_center.y)
+                print("Boss1 is spawned")
             if tile_object.name == 'venom':
                 Venom(self, obj_center.x, obj_center.y)
-
             if tile_object.name in ITEM_LIST_ALL:
                 Item(self, obj_center, tile_object.name)
 #-------------------cameras and game setting booleans---------------#
@@ -179,7 +252,6 @@ class Game:
         self.draw_debug = False           # display hit_rect of sprites
         self.night = True                 # toggle night mode
         self.paused = False               # pause the game when set to True
-        self.endgame = False
 
         self.show_item_bar = False
         self.has_item_bar = False
@@ -195,12 +267,16 @@ class Game:
 
         self.show_collection = False  # in testing
 
+        self.show_exp = True
+
         # reset the opening dialog
         self.scene = 'start'
         self.dialog = SCENES
         self.dialog['start'][0] = 'Welcome back, subject #' + str(self.code)
         self.counter = 0
-
+        self.x = 0
+        self.note_chosen = -1
+        self.col = WHITE
 
         # intense level start sound, too loud, needs to be decreased later
         # self.effects_sounds['level_start'].play()
@@ -224,7 +300,7 @@ class Game:
             self.events()
             if not self.paused:
                 self.update()
-            self.draw()
+            self.draw('')
 
 
     def update(self):
@@ -235,7 +311,7 @@ class Game:
         self.camera_main.update(self.player)
         self.camera_mini.update(self.player)
 #----------------------player collide health, fuel, torch----------------------#
-        hits = pg.sprite.spritecollide(self.player, self.items, False)
+        hits = pg.sprite.spritecollide(self.player, self.items, False, collide_hit_rect)
         for hit in hits:
             if hit.type in ITEM_LIST:
                 hit.kill()
@@ -284,10 +360,12 @@ class Game:
                 self.effects_sounds['page_turn'].play()
 
                 self.show_note = True
+                self.dialog['note'][0] = f'Note Found ({len(self.player.note_received)+1} / {len(self.note_images)})'
+
                 self.scene = 'note'
 
 #---------------------mob hit player---------------------------------------#
-        hits = pg.sprite.spritecollide(self.player, self.mobs, False, collide_hit_rect)
+        hits = pg.sprite.spritecollide(self.player, self.mobs, False, collide_hit_rect2)
         for hit in hits:
             # chance of playing player hit sounds when getting hit
             if random() < 0.7:
@@ -296,31 +374,30 @@ class Game:
             self.player.health -= MOB_DAMAGE
             # reset mobs' velocity
             hit.vel = vec(0, 0)
-
+#---------------------end game------------------------
             # exit when player's health reaches 0
             if self.player.health <= 0:   #death quote in testing
-                # self.endgame = True
-                # self.code += 1
-                # self.screen.fill(BLACK)
-                # pg.display.update()
-                # self.dialog['death'].append(choice(DEATH_QUOTE))
-                # self.show_message = True
-                # self.scene = 'death'
+                self.code += 1
+                self.show_message = True
+                self.scene = 'death'
+                self.dialog[self.scene].append(choice(DEATH_QUOTE))
                 self.playing = False
-
-        # knockback player
         if hits:
             self.player.pos += vec(MOB_KNOCKBACK, 0).rotate(-hits[0].rot)
 #-------------------------bullet hit mobs-----------------------------#
-        hits = pg.sprite.groupcollide(self.mobs, self.bullets, False, True)
+        hits = pg.sprite.groupcollide(self.mobs, self.bullets, False, True, collide_hit_rect2)
+        for hit in hits:
+            hit.health -= BULLET_DAMAGE
+            hit.vel = vec(0, 0)
+
+        hits = pg.sprite.groupcollide(self.boss1s, self.bullets, False, True, collide_hit_rect2)
         for hit in hits:
             hit.health -= BULLET_DAMAGE
             hit.vel = vec(0, 0)
 
 
-    def draw(self):
-        if self.endgame:
-            self.screen.fill(BLACK)
+    def draw(self, string):
+
 
         pg.display.flip()
         pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))  # for testing [display framerate on title]
@@ -330,13 +407,17 @@ class Game:
 
 #---------------draw sprites------------------------
         for sprite in self.all_sprites:
-            if isinstance(sprite, Mob):
+            if isinstance(sprite, Mob) or isinstance(sprite, Boss1):
                 sprite.draw_health()
+
 
             self.screen.blit(sprite.image, self.camera_main.apply(sprite))
             self.mini_map.blit(sprite.image, self.camera_mini.apply(sprite))
 
             if self.draw_debug:
+                if isinstance(sprite, Mob) or isinstance(sprite, Player) or isinstance(sprite, Boss1):
+                    pg.draw.rect(self.screen, CYAN, self.camera_main.apply_rect(sprite.rect), 1)
+
                 pg.draw.rect(self.screen, CYAN, self.camera_main.apply_rect(sprite.hit_rect), 1)
                 # if isinstance(sprite, Venom):
                 #     olist = sprite.mask.outline()
@@ -367,30 +448,38 @@ class Game:
             self.draw_weapon_bar(10, 90)
 # -----------------other stuff------------------------
         if self.show_collection:                   # in testing
-            self.paused = True
-            self.draw_collection()
-            self.paused = False
-            self.show_collection = False
+            if self.x == 1:
+                self.paused = False
+                self.show_collection = False
+                self.x = 0
+            else:
+                self.paused = True
+                self.draw_collection()
 
-        if self.show_message:
+        if self.show_exp:
+            self.draw_exp(135, 80)
+
+        if self.show_message and string != "message":
             if self.counter == len(self.dialog[self.scene]):
-                if self.endgame:
-                    self.playing = False
                 self.counter = 0
                 self.show_message = False
                 self.paused = False
+                self.note_chosen = -1
             else:
                 self.paused = True
                 self.draw_dialog(130, 550)
 
+        #    self.paused = False
+
         if self.show_note:
-            if self.counter >= len(self.dialog[self.scene]):
-                self.show_note = False
-                self.paused = False
-                self.counter = 0
-            else:
-                self.paused = True
-                self.draw_note(200, 60)
+           # if self.counter == len(self.dialog[self.scene]):
+                #self.show_note = False
+               # self.paused = False
+               # self.counter = 0
+            #else:
+            self.paused = True
+            self.draw_note(200, 60)
+
 
 
     def events(self):
@@ -479,7 +568,21 @@ class Game:
 
 
     def show_go_screen(self):
-        pass
+        pg.mixer.music.load(path.join(self.music_folder, MENU_MUSIC))
+        pg.mixer.music.play(loops=-1)
+
+       # self.draw_progress()
+
+        # display on screen messages
+        self.screen.blit(self.menu_img, (0, 0))
+
+        self.message_display("Game OVER", WIDTH / 2, HEIGHT / 4, 80, col=RED)
+        self.message_display("", WIDTH / 2, HEIGHT / 2, 22, col=RED)
+        self.message_display("Press space to restart your mission...", WIDTH / 2, HEIGHT * 3 / 4, 16, col=WHITE)
+
+        pg.display.flip()
+        wait()
+        pg.mixer.music.stop()
 
 
     def render_fog(self):
@@ -578,6 +681,29 @@ class Game:
         pg.draw.rect(surf, col, fill_rect)
         pg.draw.rect(surf, BLACK, outline_rect, 2)
 
+    def draw_exp(self, x, y):
+        BAR_LENGTH = 550
+        BAR_HEIGHT = 10
+
+        # vertical lines
+        num_of_columns = 20
+        cell_width = BAR_LENGTH / num_of_columns
+
+        fill = (self.player.exp / exp_required(self.player.level)) * BAR_LENGTH
+        outline_rect = pg.Rect(x, y, BAR_LENGTH, BAR_HEIGHT)
+        fill_rect = pg.Rect(x, y, fill, BAR_HEIGHT)
+
+
+        pg.draw.rect(self.screen, CYAN, fill_rect)
+        pg.draw.rect(self.screen, LIGHTGREY, outline_rect, 5)
+
+        for i in range(num_of_columns-1):
+            pg.draw.line(self.screen, WHITEGREY, (x + (i + 1) * cell_width, y+3),
+                         (x + (i + 1) * cell_width, y + BAR_HEIGHT-3), 2)
+
+        self.message_display(str(self.player.level),x + BAR_LENGTH/2, y -5, 14, WHITE)
+
+
 
     def draw_item_bar(self, x, y):
         BAR_LENGTH = 550
@@ -612,31 +738,65 @@ class Game:
 
 
     def draw_dialog(self, x, y):
-        self.screen.blit(self.text_box_img, (0, HEIGHT - 300))
-        self.message_display_animation(self.dialog[self.scene][self.counter], x, y)
-        wait()
-        self.counter += 1
+        done = False
+        while not done:
+            if self.counter == len(self.dialog[self.scene]):
+                done = True
+            else:
+                if self.note_chosen > 0:
+                    self.draw_chosen_note(200, 60, self.note_chosen)
+                else:
+                    self.draw('message')
+                self.screen.blit(self.text_box_img, (0, HEIGHT - 300))
+                self.message_display_animation(self.dialog[self.scene][self.counter], x, y, self.col)
+                wait()
+                self.counter += 1
+        if self.note_chosen > 0:
+            self.note_chosen = -1
+        if self.col != WHITE:
+            self.col = WHITE
 
 
     def draw_note(self, x, y):
-        self.screen.fill(NIGHT_COLOR)
+        done = False
+        while not done:
+            if self.counter == len(self.dialog[self.scene]):
+                done = True
+            else:
+                self.screen.fill(NIGHT_COLOR)
 
-        # randomize note obtained
-        li = []
-        for i in self.note_images:
-            li.append(i)
-        for i in self.player.note_received:
-            li.remove(i)
+                # randomize note obtained
+                li = []
+                for i in self.note_images:
+                    li.append(i)
+                for i in self.player.note_received:
+                    li.remove(i)
 
-        chosen = choice(li)
-        self.player.note_received.append(chosen)
+                chosen = choice(li)
+                self.player.note_received.append(chosen)
+                if chosen == 2:
+                      # load game bgm
+                    pg.mixer.music.stop()
+                    pg.mixer.music.load(path.join(self.music_folder, GLITCH_MUSIC))
+                    pg.mixer.music.play(loops=-1)
 
+                self.screen.blit(self.note_images[chosen], (WIDTH/2 - self.note_images[chosen].get_size()[0]/2, 0))
 
-        self.screen.blit(self.note_images[chosen], (WIDTH/2 - self.note_images[chosen].get_size()[0]/2, 0))
+                self.message_display_animation(self.dialog[self.scene][self.counter], x, y)
+                self.counter += 1
+                wait()
 
-        self.message_display_animation(self.dialog[self.scene][self.counter], x, y)
-        self.counter += 1
-        wait()
+        if chosen == 2:
+            pg.mixer.music.stop()
+            pg.mixer.music.load(path.join(self.music_folder, BG_MUSIC))
+            pg.mixer.music.play(loops=-1)
+
+        self.show_note = False
+        self.counter = 0
+        self.show_message = True
+        self.scene = chosen
+        self.note_chosen = chosen
+        self.col = GREEN
 
 
     def message_display(self, text, x, y, size, col=BLACK):
@@ -648,7 +808,7 @@ class Game:
         self.screen.blit(TextSurf, TextRect)
 
 
-    def message_display_animation(self, string, x, y):
+    def message_display_animation(self, string, x, y, col = WHITE):
         self.effects_sounds['typing'].play()
         basicfont = pg.font.Font('freesansbold.ttf', 30)
 
@@ -661,7 +821,7 @@ class Game:
             rand_t = uniform(0.01, 0)
             time.sleep(rand_t)
             text += string[letter]
-            text_surface = basicfont.render(text, True, WHITE)
+            text_surface = basicfont.render(text, True, col)
             text_rect = text_surface.get_rect()
             text_rect.topleft = (x, y)
             self.screen.blit(text_surface, text_rect)
@@ -682,32 +842,31 @@ class Game:
             for event in pg.event.get():
                 if event.type == pg.QUIT:
                     quit()
-                if event.type == pg.MOUSEBUTTONUP:
-                    done = True
                 if event.type == pg.KEYUP:
-                    if event.key == pg.K_SPACE:
+                    if event.key == pg.K_c:
                         done = True
-                    if event.key == pg.K_1:
+                    if event.key ==  pg.K_1:
                         note_chosen = 1
                     if event.key == pg.K_2:
                         note_chosen = 2
                     if event.key == pg.K_3:
                         note_chosen = 3
+                    if event.key == pg.K_4:
+                        note_chosen = 4
                     if note_chosen in self.player.note_received:
                         self.scene = 'note'
                         self.draw_chosen_note(200, 60, note_chosen)
+                        wait()
+
                         done = True
+        self.x = 1
 
 
     def draw_chosen_note(self, x, y, note_chosen): # in testing
         self.screen.fill(NIGHT_COLOR)
-
         self.screen.blit(self.note_images[note_chosen],
                          (WIDTH/2 - self.note_images[note_chosen].get_size()[0]/2, 0))
-
-        self.message_display_animation(self.dialog[self.scene][self.counter], x, y)
-        wait()
-        self.counter += 1
+        pg.display.update()
 
 
 # create the game object

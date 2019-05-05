@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="100" height="200" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="421">
+<map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="100" height="200" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="433">
  <tileset firstgid="1" source="../../../Desktop/32 topdown.tsx"/>
  <tileset firstgid="541" source="../../../Desktop/Kenney Topdown Pack.tsx"/>
  <layer id="8" name="Ground" width="100" height="200">
@@ -1187,23 +1187,27 @@
   <object id="391" name="wall" x="192" y="5696" width="224" height="32"/>
   <object id="392" name="wall" x="384" y="5600" width="32" height="96"/>
   <object id="393" name="wall" x="384" y="5248" width="32" height="288"/>
-  <object id="395" name="health" x="1064" y="6064" width="16" height="16"/>
-  <object id="397" name="health" x="1064" y="6024" width="16" height="16"/>
+  <object id="395" name="health" x="1080" y="5800" width="16" height="16"/>
+  <object id="397" name="health" x="688" y="5800" width="16" height="16"/>
   <object id="398" name="fuel" x="1112" y="4664" width="16" height="16"/>
   <object id="399" name="fuel" x="1144" y="4784" width="16" height="16"/>
-  <object id="401" name="health" x="832" y="5888" width="16" height="16"/>
+  <object id="401" name="health" x="600" y="5840" width="16" height="16"/>
   <object id="402" name="health" x="968" y="5736" width="16" height="16"/>
   <object id="403" name="health" x="1160" y="5544" width="16" height="16"/>
-  <object id="404" name="fuel" x="960" y="5992" width="16" height="16"/>
-  <object id="405" name="venom" x="544" y="6344" width="16" height="16"/>
-  <object id="406" name="map" x="968" y="6152" width="16" height="16"/>
-  <object id="411" name="zombie" x="760" y="5696"/>
-  <object id="412" name="destroyer" x="816" y="6016" width="16" height="16"/>
-  <object id="414" name="handgun" x="688" y="5968"/>
+  <object id="404" name="fuel" x="696" y="5936" width="16" height="16"/>
+  <object id="405" name="venom" x="536" y="5456" width="16" height="16"/>
+  <object id="406" name="map" x="736" y="6104" width="16" height="16"/>
+  <object id="411" name="zombie" x="768" y="5704"/>
+  <object id="412" name="destroyer" x="1016" y="6072" width="16" height="16"/>
+  <object id="414" name="handgun" x="456" y="5920"/>
   <object id="415" name="torch" x="1000" y="6320" width="16" height="16"/>
   <object id="416" x="448" y="992" width="16" height="16"/>
-  <object id="417" name="note" x="744" y="6080"/>
-  <object id="418" name="note" x="872" y="6096"/>
-  <object id="419" name="note" x="952" y="6048"/>
+  <object id="417" name="note" x="512" y="6032"/>
+  <object id="418" name="note" x="640" y="6048"/>
+  <object id="419" name="note" x="720" y="6000"/>
+  <object id="421" name="note" x="592" y="6040"/>
+  <object id="422" name="note" x="664" y="6112"/>
+  <object id="423" name="note" x="440" y="6112"/>
+  <object id="432" name="boss1" x="1000" y="5416"/>
  </objectgroup>
 </map>
