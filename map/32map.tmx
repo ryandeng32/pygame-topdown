@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <map version="1.2" tiledversion="1.2.3" orientation="orthogonal" renderorder="right-down" width="100" height="200" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="433">
- <tileset firstgid="1" source="../../../Desktop/32 topdown.tsx"/>
- <tileset firstgid="541" source="../../../Desktop/Kenney Topdown Pack.tsx"/>
+ <tileset firstgid="1" source="../32 topdown.tsx"/>
+ <tileset firstgid="541" source="../Kenney Topdown Pack.tsx"/>
  <layer id="8" name="Ground" width="100" height="200">
   <data encoding="csv">
 4,4,2,2,1,1,3,2,2,3,1,3,2,4,3,1,2,1,2,3,1,4,1,1,4,4,1,4,1,1,1,1,4,3,2,2,2,4,2,4,1,3,2,2,1,4,3,1,2,2,3,3,3,3,3,4,2,2,1,3,4,3,4,1,2,4,1,3,1,3,4,3,1,1,2,3,1,1,3,1,3,1,1,1,3,4,3,2,2,3,2,1,1,4,1,1,1,4,4,2,

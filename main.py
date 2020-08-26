@@ -154,10 +154,10 @@ class Game:
         for image in NOTE_IMAGES:
             self.note_images[image] = pg.image.load(path.join(self.img_folder, NOTE_IMAGES[image])).convert_alpha()
 
-        # trailer images
-        self.trailer_images = []
-        for image in TRAILER_IMAGES:
-            self.trailer_images.append(pg.image.load(path.join(self.img_folder, image)).convert())
+        # # trailer images
+        # self.trailer_images = []
+        # for image in TRAILER_IMAGES:
+        #     self.trailer_images.append(pg.image.load(path.join(self.img_folder, image)).convert())
 #-------------------------sound   loading -----------------------------#
         self.logo_music = pg.mixer.Sound(path.join(self.music_folder, LOGO_MUSIC))
         self.logo_music.set_volume(0.7)
@@ -245,7 +245,7 @@ class Game:
         self.show_weapon = False
         self.has_weapon = False
 
-        self.show_message = False
+        self.show_message = True
         self.show_note = False
 
         self.show_collection = False  # in testing
@@ -854,7 +854,7 @@ class Game:
 
 # create the game object
 g = Game()
-# g.show_logo()
+g.show_logo()
 g.show_start_screen()
 while True:
     g.new()
