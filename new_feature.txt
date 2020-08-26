@@ -1,5 +1,4 @@
 ############################################################################################################
-
 # possible addition
 # add pause screen text
 # every time you die, display something on the end screen to add to the story line

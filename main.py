@@ -2,7 +2,7 @@
 # Game name: Undecided                   #
 # File name: main.py                     #
 # Author: Ryan Deng                      #
-# Last Edited: 01/05/2019                #
+# Last Edited: 26/08/2020                #
 ##########################################
 import pygame as pg
 import sys
@@ -17,24 +17,7 @@ from tilemap import *
 from scenes import *
 from usedFunc import *
 
-# 新电脑到了之后玩一玩turing自己做的游戏
 class Game:
-# goal for today: fix the minimap  - fixed
-# experiment with different fonts
-# word wrap
-# make the minimap show explored areas -  in progress
-# tidy the code
-# level start sound
-# venom collision
-# different gun's properties
-# drop item?
-# fix opening animation, framerate_independent (crossfade and progress bar)
-# create game over screen (animation?)    - good
-# display different things when different notes are obtained,
-        # make one unique name for each note later on
-# the torch light does not change back when restart, needs to be fixed
-# make sure the game exit accpet closing from escape key as well
-# add mute
     def __init__(self):
         pg.init()
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
